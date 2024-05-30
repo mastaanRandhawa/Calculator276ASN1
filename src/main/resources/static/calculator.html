@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CMPT276 - Assignment 1</title>
+    <link rel="stylesheet" href="calculator.css" />
+  </head>
+
+  <body>
+    <div class="mainCon">
+      <div class="greyTop"></div>
+      <div class="container">
+        <h1>Grade Calculator</h1>
+        <div class="greyBox">
+          <h3>Activities</h3>
+
+          <p>Give grades to the numeric activities:</p>
+
+          <table id="gradeTable">
+            <tr>
+              <th>Name</th>
+              <th>Short Name</th>
+              <th>Weight</th>
+              <th>Grade</th>
+              <th>Percent</th>
+            </tr>
+
+            <tr>
+              <td>Activity 1</td>
+              <td>A1</td>
+              <td class="inputTd"><input id="weightText1" type="number" /></td>
+              <td class="inputTd">
+                <input
+                  id="markGotten1"
+                  type="number"
+                  onkeyup="displayPercentage('1')"
+                />
+                /
+                <input
+                  id="totalMark1"
+                  type="number"
+                  onkeyup="displayPercentage('1')"
+                />
+              </td>
+              <td>
+                <div id="displayPercent1"></div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Activity 2</td>
+              <td>A2</td>
+              <td class="inputTd"><input id="weightText2" type="number" /></td>
+              <td class="inputTd">
+                <input
+                  id="markGotten2"
+                  type="number"
+                  onkeyup="displayPercentage('2')"
+                />
+                /
+                <input
+                  id="totalMark2"
+                  type="number"
+                  onkeyup="displayPercentage('2')"
+                />
+              </td>
+              <td>
+                <div id="displayPercent2"></div>
+              </td>
+            </tr>
+          </table>
+
+          <button onclick="addRowFunction()">ADD ROW</button>
+
+          <h3>Result</h3>
+          <!-- Displaying Results -->
+          <p id="resultOutput"></p>
+
+          <div class="buttonBottomRight">
+            <button onclick="weightedResult()" class="redbutton-left">
+              WEIGHTED
+            </button>
+            <button onclick="meanResult()" class="redbutton-right">MEAN</button>
+          </div>
+        </div>
+      </div>
+      <div class="greyBottom"></div>
+    </div>
+
+    <script>
+      let activityCount = 2;
+      var displayRes = document.getElementById("resultOutput");
+
+      function addRowFunction() {
+        var table = document.getElementById("gradeTable");
+
+        var newRow = table.insertRow();
+        var cell1 = newRow.insertCell(0);
+        var cell2 = newRow.insertCell(1);
+        var cell3 = newRow.insertCell(2);
+        var cell4 = newRow.insertCell(3);
+        var cell5 = newRow.insertCell(4);
+
+        activityCount++;
+
+        cell1.innerHTML = `Activity ${activityCount}`;
+        cell2.innerHTML = `A${activityCount}`;
+        cell3.innerHTML = `<input id="weightText${activityCount}" type="number">`;
+        cell4.innerHTML = `<input id="markGotten${activityCount}" type="number" onkeyup="displayPercentage(${activityCount})"> / <input id = "totalMark${activityCount}" type="number" onkeyup="displayPercentage(${activityCount})">`;
+        cell5.innerHTML = `<div id="displayPercent${activityCount}"></div>`;
+      }
+
+      function weightedResult() {
+        var totalmark = 0;
+        var totalWeight = 0;
+
+        for (var i = 1; i <= activityCount; i++) {
+          var weight = document.getElementById(`weightText${i}`);
+          var markGot = document.getElementById(`markGotten${i}`);
+          var total = document.getElementById(`totalMark${i}`);
+
+          totalWeight = totalWeight + Number(weight.value);
+          totalmark =
+            totalmark +
+            (Number(markGot.value) / Number(total.value)) *
+              Number(weight.value);
+        }
+        var result = (totalmark / totalWeight) * 100;
+        // display now
+        displayRes.innerHTML = `The Weighted Result is ${result.toFixed(
+          2
+        )} or ${result.toFixed(2)} %`;
+      }
+
+      function meanResult() {
+        var totalres = 0;
+
+        for (var i = 1; i <= activityCount; i++) {
+          var markGot = document.getElementById(`markGotten${i}`);
+          var totalmarks = document.getElementById(`totalMark${i}`);
+          totalres =
+            totalres + Number(markGot.value) / Number(totalmarks.value);
+        }
+
+        var result = (totalres / activityCount) * 100;
+        // display now
+        displayRes.innerHTML = `The Mean Result is ${result.toFixed(
+          2
+        )} or ${result.toFixed(2)} %`;
+      }
+
+      function displayPercentage(lastChar) {
+        var markGot = document.getElementById(`markGotten${lastChar}`);
+        var total = document.getElementById(`totalMark${lastChar}`);
+
+        var percentageTopDisplay = Number(markGot.value) / Number(total.value);
+        var percentageDisplay = document.getElementById(
+          `displayPercent${lastChar}`
+        );
+        percentageDisplay.innerHTML =
+          (percentageTopDisplay * 100).toFixed(2) + "%";
+      }
+    </script>
+  </body>
+</html>
